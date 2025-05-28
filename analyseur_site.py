@@ -11,13 +11,9 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
 # --- FONCTIONS BACKEND ---
-# (Les fonctions recuperer_contenu_page_avec_selenium, get_locator_hint, analyser_page_pour_fonctionnalites,
-# generer_cas_tests_connexion, generer_cas_tests_recherche, generer_cas_tests_panier,
-# et generer_cas_tests_navigation sont abrégées ici. Utilisez leurs versions complètes
-# de la réponse précédente, en vous assurant que analyser_page_pour_fonctionnalites
-# appelle bien la dernière version de get_locator_hint pour tous les éléments.)
 
 def get_locator_hint(element):
+    # ... (Code complet de la fonction get_locator_hint - Identique à la version précédente)
     if not element: return "Élément non trouvé"
     tag_name = element.name; el_id = element.get('id')
     if el_id: return f"XPath: //{tag_name}[@id='{el_id}']"
@@ -48,7 +44,7 @@ def get_locator_hint(element):
     return f"Tag: {tag_name}"
 
 def recuperer_contenu_page_avec_selenium(url):
-    # ... (Code complet de la fonction)
+    # ... (Code complet de la fonction recuperer_contenu_page_avec_selenium - Identique)
     print(f"Tentative de récupération de l'URL avec Selenium : {url}")
     driver = None
     try:
@@ -62,9 +58,8 @@ def recuperer_contenu_page_avec_selenium(url):
         if driver: print("Fermeture du navigateur Selenium."); driver.quit()
 
 def analyser_page_pour_fonctionnalites(html_content, url_page):
-    # ... (Code complet de la fonction, s'assurant que get_locator_hint est appelé pour tous les éléments pertinents)
-    # Par exemple, pour chaque élément stocké dans les détails (champ_identifiant, bouton_recherche, etc.),
-    # ajoutez une clé "locator_hint": get_locator_hint(element_bs_correspondant)
+    # ... (Code complet de la fonction analyser_page_pour_fonctionnalites - Identique,
+    #      s'assurant que get_locator_hint est appelé partout où c'est nécessaire)
     print(f"\nDébut de l'analyse de la page : {url_page}.")
     fonctionnalites_retournees = { "url_page": url_page, "titre_page": "Pas de titre", "formulaires_connexion": [], "barres_recherche": [], "elements_panier": [], "menus_navigation": [] }
     if not html_content: return fonctionnalites_retournees
@@ -191,7 +186,7 @@ def analyser_page_pour_fonctionnalites(html_content, url_page):
     return fonctionnalites_retournees
 
 def generer_cas_tests_connexion(form_details, url_page, base_id="CT_LOGIN"):
-    # ... (Code complet, s'assurant que desc_... utilise bien locator_hint)
+    # ... (Code complet, avec les descriptions mises à jour utilisant locator_hint)
     cas_tests = []
     champ_id_details = form_details.get("champ_identifiant", {}); champ_mdp_details = form_details.get("champ_mot_de_passe", {}); bouton_soumission_details = form_details.get("bouton_soumission", {})
     desc_identifiant = f"'{champ_id_details.get('name') or champ_id_details.get('id') or champ_id_details.get('placeholder', 'identifiant')}' (Indicateur: {champ_id_details.get('locator_hint', 'N/A')})"
@@ -204,7 +199,7 @@ def generer_cas_tests_connexion(form_details, url_page, base_id="CT_LOGIN"):
     return cas_tests
 
 def generer_cas_tests_recherche(search_bar_details, url_page, base_id="CT_SEARCH"):
-    # ... (Code complet, s'assurant que desc_... utilise bien locator_hint)
+    # ... (Code complet, avec les descriptions mises à jour utilisant locator_hint)
     cas_tests = []
     champ_recherche_details = search_bar_details.get("champ_recherche", {}); bouton_recherche_details = search_bar_details.get("bouton_recherche", {})
     desc_champ_recherche = f"'{champ_recherche_details.get('name') or champ_recherche_details.get('id') or champ_recherche_details.get('placeholder', 'recherche')}' (Indicateur: {champ_recherche_details.get('locator_hint', 'N/A')})"
@@ -216,7 +211,7 @@ def generer_cas_tests_recherche(search_bar_details, url_page, base_id="CT_SEARCH
     return cas_tests
 
 def generer_cas_tests_panier(cart_element_details, url_page, base_id="CT_CART"):
-    # ... (Code complet, s'assurant que desc_... utilise bien locator_hint)
+    # ... (Code complet, avec les descriptions mises à jour utilisant locator_hint)
     cas_tests = []
     element_texte = cart_element_details.get("element_text", "l'élément du panier"); locator_hint_panier = cart_element_details.get("locator_hint", "N/A")
     desc_element_panier = f"'{element_texte}' (Indicateur: {locator_hint_panier})"
@@ -226,62 +221,74 @@ def generer_cas_tests_panier(cart_element_details, url_page, base_id="CT_CART"):
     return cas_tests
 
 def generer_cas_tests_navigation(nav_link_details, url_page, base_id="CT_NAV"):
-    # ... (Code complet, s'assurant que desc_... utilise bien locator_hint)
+    # ... (Code complet, avec les descriptions mises à jour utilisant locator_hint)
     cas_tests = []
     link_text = nav_link_details.get("texte_lien", "Lien inconnu"); link_href = nav_link_details.get("href", "#"); locator_hint_nav = nav_link_details.get("locator_hint", "N/A")
     desc_lien_nav = f"'{link_text}' (Cible: {link_href}, Indicateur: {locator_hint_nav})"
     precondition_base = f"L'utilisateur est sur la page {url_page}."
-    cas_tests.append({"ID du cas de test": f"{base_id}_{nav_link_details.get('id_menu_item', 'item')}_PRESENCE_001", "Titre du cas de test": f"Navigation: Vérifier présence/visibilité du lien {desc_lien_nav}", "Préconditions": precondition_base, "Étapes de test": f"1. Rechercher visuellement le lien de menu {desc_lien_nav}.", "Données de test": "N/A", "Résultat attendu": f"Le lien de menu {desc_lien_nav} est présent, visible et correctement libellé.", "Priorité": "Élevée"})
-    cas_tests.append({"ID du cas de test": f"{base_id}_{nav_link_details.get('id_menu_item', 'item')}_CLICK_002", "Titre du cas de test": f"Navigation: Vérifier clic et redirection du lien {desc_lien_nav}", "Préconditions": f"{precondition_base} Le lien {desc_lien_nav} est visible.", "Étapes de test": f"1. Cliquer sur le lien de menu {desc_lien_nav}.", "Données de test": "N/A", "Résultat attendu": (f"Redirection vers une page valide ({link_href}). Page chargée sans erreur."), "Priorité": "Élevée"})
+    cas_tests.append({"ID du cas de test": f"{base_id}_{nav_link_details.get('id_menu_item', 'item').replace('menu_item_', '')}_PRESENCE_001", "Titre du cas de test": f"Navigation: Vérifier présence/visibilité du lien {desc_lien_nav}", "Préconditions": precondition_base, "Étapes de test": f"1. Rechercher visuellement le lien de menu {desc_lien_nav}.", "Données de test": "N/A", "Résultat attendu": f"Le lien de menu {desc_lien_nav} est présent, visible et correctement libellé.", "Priorité": "Élevée"})
+    cas_tests.append({"ID du cas de test": f"{base_id}_{nav_link_details.get('id_menu_item', 'item').replace('menu_item_', '')}_CLICK_002", "Titre du cas de test": f"Navigation: Vérifier clic et redirection du lien {desc_lien_nav}", "Préconditions": f"{precondition_base} Le lien {desc_lien_nav} est visible.", "Étapes de test": f"1. Cliquer sur le lien de menu {desc_lien_nav}.", "Données de test": "N/A", "Résultat attendu": (f"Redirection vers une page valide ({link_href}). Page chargée sans erreur."), "Priorité": "Élevée"})
     return cas_tests
 
 # --- Classe de l'Application GUI ---
 class TestGenApp:
     def __init__(self, root_window):
         self.root = root_window
-        self.root.title("Générateur Intelligent de Cas de Test Manuels v1.2") # Version
+        self.root.title("Générateur Intelligent de Cas de Test Manuels v1.2")
         self.root.geometry("1100x800")
         
         style = ttk.Style()
-        try: style.theme_use('clam') # ou 'alt', 'default', 'classic', 'vista'
-        except tk.TclError: print("Thème ttk 'clam' non trouvé, utilisation du thème par défaut.")
+        try: style.theme_use('clam')
+        except tk.TclError: print("Thème ttk 'clam' non trouvé.")
 
-        # --- Configuration des tags pour les couleurs de priorité DANS __init__ ---
-        # On utilise des couleurs de fond pour une meilleure visibilité.
-        # Les polices en gras peuvent ne pas toujours bien rendre dans Treeview sur tous les OS.
-        self.tree.tag_configure("Priority.Élevée", foreground="black", background="#FFDDDD") # Rouge clair
-        self.tree.tag_configure("Priority.Moyenne", foreground="black", background="#FFFFCC") # Jaune clair
-        self.tree.tag_configure("Priority.Faible", foreground="black", background="#DDFFDD")  # Vert clair (si vous l'utilisez)
-        # Vous pouvez ajuster ces couleurs selon vos préférences.
-        # --- Fin configuration des tags ---
-
-        menubar = tk.Menu(self.root) # ... (Reste du __init__ identique)
+        menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         help_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Aide", menu=help_menu)
         help_menu.add_command(label="À propos du développeur", command=self.show_developer_info)
         help_menu.add_separator()
         help_menu.add_command(label="Signaler un bug", command=self.report_bug)
-        url_frame = ttk.LabelFrame(self.root, text="URL du Site Web"); url_frame.pack(padx=10, pady=5, fill="x")
+
+        url_frame = ttk.LabelFrame(self.root, text="URL du Site Web")
+        url_frame.pack(padx=10, pady=5, fill="x")
         ttk.Label(url_frame, text="URL:").pack(side=tk.LEFT, padx=5)
-        self.url_entry = ttk.Entry(url_frame, width=60); self.url_entry.pack(side=tk.LEFT, padx=5, expand=True, fill="x")
+        self.url_entry = ttk.Entry(url_frame, width=60)
+        self.url_entry.pack(side=tk.LEFT, padx=5, expand=True, fill="x")
         self.url_entry.insert(0, "https://www.wikipedia.org/")
         self.analyze_button = ttk.Button(url_frame, text="Analyser et Générer", command=self.start_analysis_thread)
         self.analyze_button.pack(side=tk.LEFT, padx=(5,0), pady=5)
-        main_content_frame = ttk.Frame(self.root); main_content_frame.pack(padx=10, pady=5, expand=True, fill="both")
-        results_frame = ttk.LabelFrame(main_content_frame, text="Cas de Test Générés"); results_frame.pack(pady=(0,5), expand=True, fill="both")
+        
+        main_content_frame = ttk.Frame(self.root)
+        main_content_frame.pack(padx=10, pady=5, expand=True, fill="both")
+        
+        results_frame = ttk.LabelFrame(main_content_frame, text="Cas de Test Générés")
+        results_frame.pack(pady=(0,5), expand=True, fill="both")
+        
         columns = ("id_test", "titre", "preconditions", "etapes", "donnees", "attendu", "priorite")
-        self.tree = ttk.Treeview(results_frame, columns=columns, show="headings")
-        col_config = { "id_test": ("ID Cas Test", 120), "titre": ("Titre Cas Test", 220), "preconditions": ("Préconditions", 180), "etapes": ("Étapes de Test", 350), "donnees": ("Données Test", 150), "attendu": ("Résultat Attendu", 200), "priorite": ("Priorité", 80) }
+        self.tree = ttk.Treeview(results_frame, columns=columns, show="headings") # Création de self.tree
+        
+        # --- DÉPLACÉ ICI : Configuration des tags APRÈS la création de self.tree ---
+        self.tree.tag_configure("Priority.Élevée", foreground="black", background="#FFDDDD") # Rouge clair
+        self.tree.tag_configure("Priority.Moyenne", foreground="black", background="#FFFFCC") # Jaune clair
+        self.tree.tag_configure("Priority.Faible", foreground="black", background="#DDFFDD")  # Vert clair (si vous l'utilisez)
+        # --- Fin configuration des tags ---
+
+        col_config = { "id_test": ("ID Cas Test", 120), "titre": ("Titre Cas Test", 220), 
+                       "preconditions": ("Préconditions", 180), "etapes": ("Étapes de Test", 350), 
+                       "donnees": ("Données Test", 150), "attendu": ("Résultat Attendu", 200), 
+                       "priorite": ("Priorité", 80) }
         for col_id, (col_text, col_width) in col_config.items():
             self.tree.heading(col_id, text=col_text)
             self.tree.column(col_id, width=col_width, anchor=tk.W, stretch=(col_id not in ["id_test", "priorite"]))
+        
         vsb = ttk.Scrollbar(results_frame, orient="vertical", command=self.tree.yview); hsb = ttk.Scrollbar(results_frame, orient="horizontal", command=self.tree.xview)
         self.tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set); vsb.pack(side='right', fill='y'); hsb.pack(side='bottom', fill='x')
         self.tree.pack(expand=True, fill='both')
+        
         action_buttons_frame = ttk.Frame(main_content_frame); action_buttons_frame.pack(fill=tk.X, pady=(5,0))
         self.export_csv_button = ttk.Button(action_buttons_frame, text="Exporter en CSV", command=self.export_to_csv, state=tk.DISABLED)
         self.export_csv_button.pack(side=tk.LEFT, padx=5, pady=5)
+        
         self.status_bar = ttk.Label(self.root, text="Prêt. Développé par Chihi Amine.", relief=tk.SUNKEN, anchor=tk.W)
         self.status_bar.pack(side=tk.BOTTOM, fill=tk.X, pady=(5,0))
         self.generated_test_cases_data = []
@@ -309,7 +316,7 @@ class TestGenApp:
         self.tree.delete(*self.tree.get_children()); self.generated_test_cases_data = []
         thread = threading.Thread(target=self.run_analysis, args=(url,)); thread.daemon = True; thread.start()
 
-    def run_analysis(self, url): # ... (Identique pour les appels)
+    def run_analysis(self, url): # ... (Identique)
         try:
             print(f"Lancement de l'analyse pour l'URL : {url}")
             contenu_html = recuperer_contenu_page_avec_selenium(url)
@@ -327,7 +334,7 @@ class TestGenApp:
                         all_test_cases_for_url.extend(generer_cas_tests_panier(cart_data, fonctionnalites["url_page"], base_id=f"CT_CART_EL_{i+1}"))
                 if fonctionnalites.get("menus_navigation"): 
                     for i, nav_link_data in enumerate(fonctionnalites["menus_navigation"]):
-                        all_test_cases_for_url.extend(generer_cas_tests_navigation(nav_link_data, fonctionnalites["url_page"], base_id=f"CT_NAV_LINK_{nav_link_data.get('id_menu_item','')}"))
+                        all_test_cases_for_url.extend(generer_cas_tests_navigation(nav_link_data, fonctionnalites["url_page"], base_id=f"CT_NAV_LINK_{nav_link_data.get('id_menu_item','').replace('menu_item_','')}"))
                 self.root.after(0, self.update_gui_with_results, all_test_cases_for_url, fonctionnalites.get('titre_page', 'Titre inconnu'))
             else:
                 self.root.after(0, self.update_gui_with_error, f"Impossible de récupérer le contenu de {url}.")
@@ -339,11 +346,9 @@ class TestGenApp:
             
     def update_gui_with_results(self, test_cases, page_title):
         self.status_bar.config(text=f"Analyse terminée: {page_title}. {len(test_cases)} cas de test générés.")
-        
         if not test_cases: 
             messagebox.showinfo("Résultats", "Aucun cas de test pertinent n'a pu être généré.")
-            self.export_csv_button.config(state=tk.DISABLED)
-            return
+            self.export_csv_button.config(state=tk.DISABLED); return
         
         self.generated_test_cases_data = test_cases
         print(f"[DEBUG GUI] Dans update_gui_with_results. Nombre de cas à afficher: {len(test_cases)}")
@@ -357,18 +362,18 @@ class TestGenApp:
                 tc.get("Données de test", ""), tc.get("Résultat attendu", ""),
                 tc.get("Priorité", "")
             )
-            
             priority_value = tc.get("Priorité", "")
-            current_tags = [] # Utiliser une liste pour les tags
-            if priority_value == "Élevée":
-                current_tags.append("Priority.Élevée")
-            elif priority_value == "Moyenne":
-                current_tags.append("Priority.Moyenne")
-            elif priority_value == "Faible": # Assurez-vous que cette priorité est générée
-                current_tags.append("Priority.Faible")
+            current_tags = [] 
+            if priority_value == "Élevée": current_tags.append("Priority.Élevée")
+            elif priority_value == "Moyenne": current_tags.append("Priority.Moyenne")
+            elif priority_value == "Faible": current_tags.append("Priority.Faible")
             
             try:
-                item_id = tc.get("ID du cas de test", f"item_{i}_{time.time()}") # iid plus unique
+                # Utiliser un iid basé sur l'ID du cas de test pour unicité si possible, sinon un fallback
+                item_id = tc.get("ID du cas de test") 
+                if not item_id or self.tree.exists(item_id): # Si l'ID est vide ou déjà utilisé
+                    item_id = f"item_{i}_{int(time.time()*1000)}" # Fallback plus unique
+                
                 self.tree.insert("", tk.END, iid=item_id, values=values, tags=tuple(current_tags))
                 item_inserted_count += 1
             except Exception as e_insert:
@@ -378,11 +383,10 @@ class TestGenApp:
         print(f"[DEBUG GUI] Nombre d'items réellement tentés pour insertion: {len(test_cases)}")
         print(f"[DEBUG GUI] Nombre d'items insérés avec succès (selon compteur): {item_inserted_count}")
         
-        self.tree.update_idletasks() # Forcer la mise à jour de l'affichage
+        self.tree.update_idletasks()
         self.root.update_idletasks()
 
-        if item_inserted_count > 0:
-            self.export_csv_button.config(state=tk.NORMAL)
+        if item_inserted_count > 0: self.export_csv_button.config(state=tk.NORMAL)
         else:
             self.export_csv_button.config(state=tk.DISABLED)
             if len(test_cases) > 0:
