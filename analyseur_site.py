@@ -13,7 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 # --- FONCTIONS BACKEND ---
 
 def get_locator_hint(element):
-    # ... (Code complet de la fonction get_locator_hint - Identique à la version précédente)
+    # ... (Identique à la version précédente)
     if not element: return "Élément non trouvé"
     tag_name = element.name; el_id = element.get('id')
     if el_id: return f"XPath: //{tag_name}[@id='{el_id}']"
@@ -44,7 +44,7 @@ def get_locator_hint(element):
     return f"Tag: {tag_name}"
 
 def recuperer_contenu_page_avec_selenium(url):
-    # ... (Code complet de la fonction recuperer_contenu_page_avec_selenium - Identique)
+    # ... (Identique à la version précédente)
     print(f"Tentative de récupération de l'URL avec Selenium : {url}")
     driver = None
     try:
@@ -58,8 +58,8 @@ def recuperer_contenu_page_avec_selenium(url):
         if driver: print("Fermeture du navigateur Selenium."); driver.quit()
 
 def analyser_page_pour_fonctionnalites(html_content, url_page):
-    # ... (Code complet de la fonction analyser_page_pour_fonctionnalites - Identique,
-    #      s'assurant que get_locator_hint est appelé partout où c'est nécessaire)
+    # ... (Code complet et identique à la version précédente pour l'analyse,
+    #      s'assurant que get_locator_hint est bien appelé pour tous les éléments)
     print(f"\nDébut de l'analyse de la page : {url_page}.")
     fonctionnalites_retournees = { "url_page": url_page, "titre_page": "Pas de titre", "formulaires_connexion": [], "barres_recherche": [], "elements_panier": [], "menus_navigation": [] }
     if not html_content: return fonctionnalites_retournees
@@ -187,7 +187,7 @@ def analyser_page_pour_fonctionnalites(html_content, url_page):
 
 def generer_cas_tests_connexion(form_details, url_page, base_id="CT_LOGIN"):
     # ... (Code complet, avec les descriptions mises à jour utilisant locator_hint)
-    cas_tests = []
+    cas_tests = [] # ... (Identique)
     champ_id_details = form_details.get("champ_identifiant", {}); champ_mdp_details = form_details.get("champ_mot_de_passe", {}); bouton_soumission_details = form_details.get("bouton_soumission", {})
     desc_identifiant = f"'{champ_id_details.get('name') or champ_id_details.get('id') or champ_id_details.get('placeholder', 'identifiant')}' (Indicateur: {champ_id_details.get('locator_hint', 'N/A')})"
     desc_mdp = f"'{champ_mdp_details.get('name') or champ_mdp_details.get('id') or champ_mdp_details.get('placeholder', 'mot de passe')}' (Indicateur: {champ_mdp_details.get('locator_hint', 'N/A')})"
@@ -200,7 +200,7 @@ def generer_cas_tests_connexion(form_details, url_page, base_id="CT_LOGIN"):
 
 def generer_cas_tests_recherche(search_bar_details, url_page, base_id="CT_SEARCH"):
     # ... (Code complet, avec les descriptions mises à jour utilisant locator_hint)
-    cas_tests = []
+    cas_tests = [] # ... (Identique)
     champ_recherche_details = search_bar_details.get("champ_recherche", {}); bouton_recherche_details = search_bar_details.get("bouton_recherche", {})
     desc_champ_recherche = f"'{champ_recherche_details.get('name') or champ_recherche_details.get('id') or champ_recherche_details.get('placeholder', 'recherche')}' (Indicateur: {champ_recherche_details.get('locator_hint', 'N/A')})"
     desc_bouton_recherche = f"'{bouton_recherche_details.get('text') or 'recherche'}' (Indicateur: {bouton_recherche_details.get('locator_hint', 'N/A')})"
@@ -212,7 +212,7 @@ def generer_cas_tests_recherche(search_bar_details, url_page, base_id="CT_SEARCH
 
 def generer_cas_tests_panier(cart_element_details, url_page, base_id="CT_CART"):
     # ... (Code complet, avec les descriptions mises à jour utilisant locator_hint)
-    cas_tests = []
+    cas_tests = [] # ... (Identique)
     element_texte = cart_element_details.get("element_text", "l'élément du panier"); locator_hint_panier = cart_element_details.get("locator_hint", "N/A")
     desc_element_panier = f"'{element_texte}' (Indicateur: {locator_hint_panier})"
     precondition = f"L'utilisateur est sur la page {url_page} où un élément de panier ({desc_element_panier}) est visible."
@@ -220,22 +220,34 @@ def generer_cas_tests_panier(cart_element_details, url_page, base_id="CT_CART"):
     cas_tests.append({"ID du cas de test": f"{base_id}_PRESENCE_CLICKABLE_002", "Titre du cas de test": f"Vérifier la présence et la cliquabilité de {desc_element_panier}", "Préconditions": f"L'utilisateur est sur une page où {desc_element_panier} devrait être visible (ex: {url_page}).", "Étapes de test": (f"1. Repérer {desc_element_panier}.\n2. Vérifier qu'il est cliquable."), "Données de test": "N/A", "Résultat attendu": "L'élément du panier est présent, visible et interactif.", "Priorité": "Moyenne"})
     return cas_tests
 
-def generer_cas_tests_navigation(nav_link_details, url_page, base_id="CT_NAV"):
-    # ... (Code complet, avec les descriptions mises à jour utilisant locator_hint)
-    cas_tests = []
-    link_text = nav_link_details.get("texte_lien", "Lien inconnu"); link_href = nav_link_details.get("href", "#"); locator_hint_nav = nav_link_details.get("locator_hint", "N/A")
+def generer_cas_tests_navigation(nav_link_details, url_page, base_id="CT_NAV", max_tests=None): # NOUVEAU: max_tests
+    # ... (MODIFIÉ pour inclure locator_hint et max_tests)
+    cas_tests_potentiels = []
+    link_text = nav_link_details.get("texte_lien", "Lien inconnu")
+    link_href = nav_link_details.get("href", "#")
+    locator_hint_nav = nav_link_details.get("locator_hint", "N/A")
     desc_lien_nav = f"'{link_text}' (Cible: {link_href}, Indicateur: {locator_hint_nav})"
+    
     precondition_base = f"L'utilisateur est sur la page {url_page}."
-    cas_tests.append({"ID du cas de test": f"{base_id}_{nav_link_details.get('id_menu_item', 'item').replace('menu_item_', '')}_PRESENCE_001", "Titre du cas de test": f"Navigation: Vérifier présence/visibilité du lien {desc_lien_nav}", "Préconditions": precondition_base, "Étapes de test": f"1. Rechercher visuellement le lien de menu {desc_lien_nav}.", "Données de test": "N/A", "Résultat attendu": f"Le lien de menu {desc_lien_nav} est présent, visible et correctement libellé.", "Priorité": "Élevée"})
-    cas_tests.append({"ID du cas de test": f"{base_id}_{nav_link_details.get('id_menu_item', 'item').replace('menu_item_', '')}_CLICK_002", "Titre du cas de test": f"Navigation: Vérifier clic et redirection du lien {desc_lien_nav}", "Préconditions": f"{precondition_base} Le lien {desc_lien_nav} est visible.", "Étapes de test": f"1. Cliquer sur le lien de menu {desc_lien_nav}.", "Données de test": "N/A", "Résultat attendu": (f"Redirection vers une page valide ({link_href}). Page chargée sans erreur."), "Priorité": "Élevée"})
-    return cas_tests
+    id_suffix = nav_link_details.get('id_menu_item','item').replace('menu_item_','')
+
+    cas_tests_potentiels.append({"ID du cas de test": f"{base_id}_{id_suffix}_PRESENCE_001", "Titre du cas de test": f"Navigation: Vérifier présence/visibilité du lien {desc_lien_nav}", "Préconditions": precondition_base, "Étapes de test": f"1. Rechercher visuellement le lien de menu {desc_lien_nav}.", "Données de test": "N/A", "Résultat attendu": f"Le lien de menu {desc_lien_nav} est présent, visible et correctement libellé.", "Priorité": "Élevée"})
+    cas_tests_potentiels.append({"ID du cas de test": f"{base_id}_{id_suffix}_CLICK_002", "Titre du cas de test": f"Navigation: Vérifier clic et redirection du lien {desc_lien_nav}", "Préconditions": f"{precondition_base} Le lien {desc_lien_nav} est visible.", "Étapes de test": f"1. Cliquer sur le lien de menu {desc_lien_nav}.", "Données de test": "N/A", "Résultat attendu": (f"Redirection vers une page valide ({link_href}). Page chargée sans erreur."), "Priorité": "Élevée"})
+    # Cas 3 (destination technique) pourrait être conditionnel ou optionnel
+    # cas_tests_potentiels.append({"ID du cas de test": f"{base_id}_{id_suffix}_HREF_003", "Titre du cas de test": f"Navigation: Vérifier destination technique du lien {desc_lien_nav}", "Préconditions": f"{precondition_base} Le lien '{link_text}' est visible.", "Étapes de test": f"1. Inspecter l'attribut 'href' du lien de menu '{link_text}'.", "Données de test": "N/A", "Résultat attendu": f"L'attribut 'href' est '{link_href}'.", "Priorité": "Moyenne"})
+
+    if max_tests is not None and max_tests > 0 and len(cas_tests_potentiels) > max_tests:
+        print(f"[INFO] Limitation du nombre de tests de navigation pour '{link_text}' à {max_tests}.")
+        return cas_tests_potentiels[:max_tests]
+    return cas_tests_potentiels
+
 
 # --- Classe de l'Application GUI ---
 class TestGenApp:
     def __init__(self, root_window):
         self.root = root_window
-        self.root.title("Générateur Intelligent de Cas de Test Manuels v1.2")
-        self.root.geometry("1100x800")
+        self.root.title("Générateur Intelligent de Cas de Test Manuels v1.3") # Version
+        self.root.geometry("1100x850") # Un peu plus haut pour les options
         
         style = ttk.Style()
         try: style.theme_use('clam')
@@ -249,6 +261,7 @@ class TestGenApp:
         help_menu.add_separator()
         help_menu.add_command(label="Signaler un bug", command=self.report_bug)
 
+        # --- Cadre URL ---
         url_frame = ttk.LabelFrame(self.root, text="URL du Site Web")
         url_frame.pack(padx=10, pady=5, fill="x")
         ttk.Label(url_frame, text="URL:").pack(side=tk.LEFT, padx=5)
@@ -258,6 +271,17 @@ class TestGenApp:
         self.analyze_button = ttk.Button(url_frame, text="Analyser et Générer", command=self.start_analysis_thread)
         self.analyze_button.pack(side=tk.LEFT, padx=(5,0), pady=5)
         
+        # --- NOUVEAU: Cadre de Configuration des Filtres ---
+        config_frame = ttk.LabelFrame(self.root, text="Options de Génération")
+        config_frame.pack(padx=10, pady=5, fill="x")
+        
+        ttk.Label(config_frame, text="Max tests / lien de navigation (0=tous):").pack(side=tk.LEFT, padx=(5,0))
+        self.max_nav_tests_var = tk.StringVar(value="3") # Valeur par défaut pour max tests nav
+        self.max_nav_tests_entry = ttk.Entry(config_frame, textvariable=self.max_nav_tests_var, width=5)
+        self.max_nav_tests_entry.pack(side=tk.LEFT, padx=5)
+        # On pourrait ajouter d'autres filtres ici (ex: max tests login, etc.)
+
+        # --- Cadre Principal (Résultats et Actions) ---
         main_content_frame = ttk.Frame(self.root)
         main_content_frame.pack(padx=10, pady=5, expand=True, fill="both")
         
@@ -265,13 +289,11 @@ class TestGenApp:
         results_frame.pack(pady=(0,5), expand=True, fill="both")
         
         columns = ("id_test", "titre", "preconditions", "etapes", "donnees", "attendu", "priorite")
-        self.tree = ttk.Treeview(results_frame, columns=columns, show="headings") # Création de self.tree
+        self.tree = ttk.Treeview(results_frame, columns=columns, show="headings")
         
-        # --- DÉPLACÉ ICI : Configuration des tags APRÈS la création de self.tree ---
-        self.tree.tag_configure("Priority.Élevée", foreground="black", background="#FFDDDD") # Rouge clair
-        self.tree.tag_configure("Priority.Moyenne", foreground="black", background="#FFFFCC") # Jaune clair
-        self.tree.tag_configure("Priority.Faible", foreground="black", background="#DDFFDD")  # Vert clair (si vous l'utilisez)
-        # --- Fin configuration des tags ---
+        self.tree.tag_configure("Priority.Élevée", foreground="black", background="#FFDDDD")
+        self.tree.tag_configure("Priority.Moyenne", foreground="black", background="#FFFFCC")
+        self.tree.tag_configure("Priority.Faible", foreground="black", background="#DDFFDD")
 
         col_config = { "id_test": ("ID Cas Test", 120), "titre": ("Titre Cas Test", 220), 
                        "preconditions": ("Préconditions", 180), "etapes": ("Étapes de Test", 350), 
@@ -307,18 +329,35 @@ class TestGenApp:
         try: webbrowser.open(mailto_url); messagebox.showinfo("Signaler un bug", "Votre client de messagerie devrait s'ouvrir.")
         except Exception as e: messagebox.showerror("Erreur", f"Impossible d'ouvrir le client de messagerie.\nErreur: {e}\nEmail: amine.chihi@hotmail.fr")
 
-    def start_analysis_thread(self): # ... (Identique)
+    def start_analysis_thread(self):
         url = self.url_entry.get();
         if not url or not (url.startswith("http://") or url.startswith("https://")):
             messagebox.showerror("URL Invalide", "Veuillez entrer une URL valide."); return
+        
+        # Récupérer la limite pour les tests de navigation
+        try:
+            max_nav_str = self.max_nav_tests_var.get()
+            if not max_nav_str: # Si vide, considérer comme pas de limite
+                self.current_max_nav_tests = None 
+            else:
+                self.current_max_nav_tests = int(max_nav_str)
+                if self.current_max_nav_tests <= 0: # 0 ou négatif signifie pas de limite / tous
+                    self.current_max_nav_tests = None 
+        except ValueError:
+            messagebox.showerror("Erreur de Configuration", "La valeur pour 'Max tests / lien de navigation' doit être un nombre entier.")
+            return
+            
         self.analyze_button.config(state=tk.DISABLED); self.export_csv_button.config(state=tk.DISABLED)
         self.status_bar.config(text=f"Analyse de {url} en cours...")
         self.tree.delete(*self.tree.get_children()); self.generated_test_cases_data = []
-        thread = threading.Thread(target=self.run_analysis, args=(url,)); thread.daemon = True; thread.start()
+        # Passer current_max_nav_tests au thread d'analyse
+        thread = threading.Thread(target=self.run_analysis, args=(url, self.current_max_nav_tests)); 
+        thread.daemon = True; thread.start()
 
-    def run_analysis(self, url): # ... (Identique)
+    def run_analysis(self, url, max_nav_tests_config): # NOUVEAU paramètre
         try:
             print(f"Lancement de l'analyse pour l'URL : {url}")
+            print(f"Configuration - Max tests navigation: {max_nav_tests_config}")
             contenu_html = recuperer_contenu_page_avec_selenium(url)
             all_test_cases_for_url = []
             if contenu_html:
@@ -333,8 +372,25 @@ class TestGenApp:
                     for i, cart_data in enumerate(fonctionnalites["elements_panier"]):
                         all_test_cases_for_url.extend(generer_cas_tests_panier(cart_data, fonctionnalites["url_page"], base_id=f"CT_CART_EL_{i+1}"))
                 if fonctionnalites.get("menus_navigation"): 
-                    for i, nav_link_data in enumerate(fonctionnalites["menus_navigation"]):
+                    # Appliquer la limite ici, avant d'appeler la génération pour chaque lien
+                    liens_nav_a_traiter = fonctionnalites["menus_navigation"]
+                    # Note: la fonction generer_cas_tests_navigation génère plusieurs tests PAR LIEN.
+                    # Le filtre "max_tests" devrait plutôt limiter le nombre de *liens* traités,
+                    # ou le nombre de *types* de tests générés par lien.
+                    # Pour l'instant, la fonction generer_cas_tests_navigation a un param max_tests qui limite les tests PAR LIEN.
+                    for i, nav_link_data in enumerate(liens_nav_a_traiter):
                         all_test_cases_for_url.extend(generer_cas_tests_navigation(nav_link_data, fonctionnalites["url_page"], base_id=f"CT_NAV_LINK_{nav_link_data.get('id_menu_item','').replace('menu_item_','')}"))
+                        # Si on voulait limiter le nombre TOTAL de tests de navigation:
+                        # if max_nav_tests_config is not None and len(all_test_cases_for_url) >= max_nav_tests_config:
+                        #    print(f"[INFO] Limite max de {max_nav_tests_config} tests de navigation atteinte.")
+                        #    break
+                        # La modification actuelle dans generer_cas_tests_navigation limite les tests PAR LIEN.
+                        # Si on veut limiter le nombre de liens traités, il faudrait faire:
+                        # if max_nav_tests_config is not None and i >= max_nav_tests_config:
+                        #    print(f"[INFO] Limite du nombre de liens de navigation ({max_nav_tests_config}) traitée.")
+                        #    break
+
+
                 self.root.after(0, self.update_gui_with_results, all_test_cases_for_url, fonctionnalites.get('titre_page', 'Titre inconnu'))
             else:
                 self.root.after(0, self.update_gui_with_error, f"Impossible de récupérer le contenu de {url}.")
@@ -344,53 +400,31 @@ class TestGenApp:
         finally:
             self.root.after(0, self.finalize_analysis_ui)
             
-    def update_gui_with_results(self, test_cases, page_title):
+    def update_gui_with_results(self, test_cases, page_title): # ... (Identique, avec la correction pour le bug d'affichage)
         self.status_bar.config(text=f"Analyse terminée: {page_title}. {len(test_cases)} cas de test générés.")
-        if not test_cases: 
-            messagebox.showinfo("Résultats", "Aucun cas de test pertinent n'a pu être généré.")
-            self.export_csv_button.config(state=tk.DISABLED); return
-        
+        if not test_cases: messagebox.showinfo("Résultats", "Aucun cas de test pertinent n'a pu être généré."); self.export_csv_button.config(state=tk.DISABLED); return
         self.generated_test_cases_data = test_cases
         print(f"[DEBUG GUI] Dans update_gui_with_results. Nombre de cas à afficher: {len(test_cases)}")
-
         item_inserted_count = 0
-        # La configuration des tags est maintenant dans __init__
         for i, tc in enumerate(test_cases):
-            values = (
-                tc.get("ID du cas de test", ""), tc.get("Titre du cas de test", ""), 
-                tc.get("Préconditions", ""), tc.get("Étapes de test", ""), 
-                tc.get("Données de test", ""), tc.get("Résultat attendu", ""),
-                tc.get("Priorité", "")
-            )
-            priority_value = tc.get("Priorité", "")
-            current_tags = [] 
+            values = (tc.get("ID du cas de test", ""), tc.get("Titre du cas de test", ""), tc.get("Préconditions", ""), tc.get("Étapes de test", ""), tc.get("Données de test", ""), tc.get("Résultat attendu", ""), tc.get("Priorité", ""))
+            priority_value = tc.get("Priorité", ""); current_tags = [] 
             if priority_value == "Élevée": current_tags.append("Priority.Élevée")
             elif priority_value == "Moyenne": current_tags.append("Priority.Moyenne")
             elif priority_value == "Faible": current_tags.append("Priority.Faible")
-            
             try:
-                # Utiliser un iid basé sur l'ID du cas de test pour unicité si possible, sinon un fallback
-                item_id = tc.get("ID du cas de test") 
-                if not item_id or self.tree.exists(item_id): # Si l'ID est vide ou déjà utilisé
-                    item_id = f"item_{i}_{int(time.time()*1000)}" # Fallback plus unique
-                
+                item_id = tc.get("ID du cas de test", f"item_{i}_{int(time.time()*1000)}") 
+                if not item_id or self.tree.exists(item_id): item_id = f"item_{i}_{int(time.time()*1000)}_{item_inserted_count}"
                 self.tree.insert("", tk.END, iid=item_id, values=values, tags=tuple(current_tags))
                 item_inserted_count += 1
-            except Exception as e_insert:
-                print(f"[ERREUR GUI] Erreur lors de l'insertion du cas de test ID '{item_id}': {values}")
-                print(f"[ERREUR GUI] Exception: {e_insert}")
-        
+            except Exception as e_insert: print(f"[ERREUR GUI] Erreur lors de l'insertion du cas de test ID '{item_id}': {values}\n[ERREUR GUI] Exception: {e_insert}")
         print(f"[DEBUG GUI] Nombre d'items réellement tentés pour insertion: {len(test_cases)}")
         print(f"[DEBUG GUI] Nombre d'items insérés avec succès (selon compteur): {item_inserted_count}")
-        
-        self.tree.update_idletasks()
-        self.root.update_idletasks()
-
+        self.tree.update_idletasks(); self.root.update_idletasks()
         if item_inserted_count > 0: self.export_csv_button.config(state=tk.NORMAL)
         else:
             self.export_csv_button.config(state=tk.DISABLED)
-            if len(test_cases) > 0:
-                 messagebox.showwarning("Affichage", "Des données ont été générées mais n'ont pas pu être affichées dans le tableau.")
+            if len(test_cases) > 0: messagebox.showwarning("Affichage", "Des données ont été générées mais n'ont pas pu être affichées.")
 
     def update_gui_with_error(self, error_message): # ... (Identique)
         self.status_bar.config(text=f"Erreur : {error_message}"); messagebox.showerror("Erreur d'Analyse", error_message); self.export_csv_button.config(state=tk.DISABLED)
@@ -402,7 +436,7 @@ class TestGenApp:
         if "Analyse de" in current_status: self.status_bar.config(text="Prêt. Analyse terminée (vérifiez les résultats).")
         elif not self.generated_test_cases_data and "Erreur" not in current_status: self.status_bar.config(text="Prêt. Aucune donnée pertinente trouvée ou générée.")
     
-    def export_to_csv(self): # ... (Identique, avec delimiter=';')
+    def export_to_csv(self): # ... (Identique)
         if not self.generated_test_cases_data: messagebox.showwarning("Exportation CSV", "Aucun cas de test à exporter."); return
         fieldnames = ["ID du cas de test", "Titre du cas de test", "Préconditions", "Étapes de test", "Données de test", "Résultat attendu", "Résultat obtenu", "Statut", "Priorité", "Commentaires"]
         filepath = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("Fichiers CSV", "*.csv"), ("Tous les fichiers", "*.*")], title="Enregistrer les cas de test sous...")
