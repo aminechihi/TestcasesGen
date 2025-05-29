@@ -61,4 +61,4 @@ Fonctionnalité pour signaler des bugs par email.
 Après avoir installé les dépendances, vous pouvez lancer l'application en exécutant le script principal :
 
 ```bash
-python analyseur_site.py
+python TestCasesGen.py
