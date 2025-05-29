@@ -2,6 +2,10 @@
 
 TestCasesGen, développé par Chihi Amine, est une application Python avec une interface graphique Tkinter. Elle analyse des pages web pour identifier des fonctionnalités communes et générer des ébauches de cas de tests manuels. L'application intègre également des fonctionnalités d'automatisation partielle via Selenium et permet le suivi de l'exécution des tests.
 
+
+
+![screenshot]([URL_to_your_image_on_GitHub](https://github.com/aminechihi/TestcasesGen/blob/main/assets/images/screenshots/Thumb.png))
+
 ##Fonctionnalités Principales : 
 
 Analyse de Pages Web 🕵️‍♀️: Utilise Selenium et BeautifulSoup pour récupérer et décortiquer le contenu HTML des sites web.
