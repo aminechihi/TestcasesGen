@@ -4,7 +4,7 @@ TestCasesGen, développé par Chihi Amine, est une application Python avec une i
 
 
 
-![screenshot]([URL_to_your_image_on_GitHub](https://github.com/aminechihi/TestcasesGen/blob/main/assets/images/screenshots/Thumb.png))
+![screenshot](https://github.com/aminechihi/TestcasesGen/blob/main/assets/images/screenshots/Thumb.png)
 
 ##Fonctionnalités Principales : 
 
